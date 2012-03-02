@@ -1,15 +1,12 @@
-;; Allens Zeitlogik
-;; ----------------
-
-;; Die Relationenmenge 
+;; The set of allan relations 
 
 (defvar *r*)
 (setq *r* '(= < > d di o oi m mi s si f fi))
 
-;; Die P-Matrix
+;; The p-matrix
 
-;; Die Einträge für = wurde ausgelassen, da in diesem Fall die
-;; Beziehung immer bestehen bleibt.
+;; Entries for the = relation have been skipped, in this case the relation
+;; stays the same
 
 (defvar *pmatrix*)
 (setq *pmatrix* 
@@ -28,17 +25,21 @@
         (< > d (oi mi di si) (o d s) (> oi mi) m > d (> oi mi) f (= f fi))
         (< (> oi mi di si) (o d s) di o (oi di si) m (oi di si) o di (= f fi) fi)))
 
-;; Die p-Relation
+;; The p relation, returning a list even for single results
 
 (defun list-p (x y)
 	(let ((pv (p x y)))
 		(cond ((atom pv) (list pv))
 		      (T pv))))
 
+;; The p relation, returning an atom for single results
+
 (defun p (x y)
   (cond ((EQUAL x '=) y)
         ((EQUAL y '=) x)
         (T (getindex y (cdr *r*) (getindex x (cdr *r*) *pmatrix*)))))
+
+;; Used internally by p
 
 (defun getindex (index referenz inhalt)
   (cond ((null referenz) nil)
@@ -47,25 +48,27 @@
         (T (getindex index (cdr referenz)(cdr inhalt)))))
 
 
+;; Return true if a list has only one element
 
-;; --- Noch zu definieren! Uebungsaufgabe!
-
-;; Die P-Relation (übertragen auf Mengen)
-
-(defun one (l) 
+(defun one (l)
 	(null (cdr l)))
+
+;; Returns the P of two relations, single values are represented as a list
+;; x and y need to be lists
 
 (defun uniq-big-p(x y)
   (remove-duplicates (big-p x y)))
 
-; pass only lists!
+;; Returns the P of two relations, single values are represented as a list
+;; x and y need to be lists. The return may contain duplicates.
+
 (defun big-p (x y)
   (cond ((AND (one x)(one y)) (list-p (car x) (car y)))
         ((one x) (append (big-p x (list (car y))) (big-p x (cdr y))))
 	((one y) (append (big-p (list (car x)) y) (big-p (cdr x) y)))
 	(T (append (big-p (list (car x)) y) (big-p (cdr x) y)))))
 
-;; Die Schnittmenge
+;; Returns the intersection of two lists of allan relations
 
 (defun list-intersection (L1 L2)
   (cond
@@ -74,7 +77,7 @@
     (cons (first L1) (list-intersection (rest L1) L2)))
    (t (list-intersection (rest L1) L2))))
 
-;; Invertieren einer Relation
+;; Allan relation inversion
 
 (defun invert-relation (r)
   (cond ((equal r '=) '=)
@@ -84,14 +87,16 @@
         ((equal r 'd) 'di)
         ((equal r 'o) 'oi)
         ((equal r 's) 'si)
-        ((equal r 'f) 'fi)
+        ((equal r 'f)find-cycles 'fi)
 	((equal r 'mi) 'm)
         ((equal r 'di) 'd)
         ((equal r 'oi) 'o)
         ((equal r 'si) 's)
         ((equal r 'fi) 'f)))
 
-(defun dfs (node children relations visited) ; (print (list node children relations visited))
+;; Used internally by start-dfs
+
+(defun dfs (node children relations visited)
   (cond ((and (member node visited) (equal children relations)) visited)
         ((null children) (cons node visited))
         (T (dfs node (cdr children) relations 
@@ -101,17 +106,30 @@
 		  (dfs (caar children) relations relations (cons node visited)))
 		(T (cons node visited)))))))
 
-(defun start-dfs (node relations)
-  (remove-duplicates (dfs node relations relations '())))
+;; Runs a depth first search on the graph represented by the relations. 
+;; Start is the node where the search is started.
+
+(defun start-dfs (start relations)
+  (remove-duplicates (dfs start relations relations '())))
+
+;; Return an association list containing all entries in the nodes list as keys. 
+;; Each entry has a value of the value parameter.
 
 (defun repeated-alist (nodes value)
   (cond ((null nodes) '())
         (T (acons (car nodes) value (repeated-alist (cdr nodes) value)))))
 
+;; Checks if all entries in nodes list have the value two
+;; in the association list alist.
+
 (defun are-all-nodes-two (nodes alist)
   (or (null nodes)
       (and (= (cdr (assoc (car nodes) alist)) 2) 
            (are-all-nodes-two (cdr nodes) alist))))
+
+;; Counts the number of relations leaving and going to each node.
+;; Counters needs to be an association list containing all nodes 
+;; as keys with the values set to 0.
 
 (defun count-nodes (relations counters)
   (cond ((null relations) counters)
@@ -119,10 +137,32 @@
           (let ((counters2 (acons (caar relations) (+ (cdr (assoc (caar relations) counters)) 1) counters)))
 	    (acons (cdar relations) (+ (cdr (assoc (cdar relations) counters2)) 1) counters2))))))
 
-(defun is-connected (nodes relations)
-  (and (equal (sort nodes '<) (sort (start-dfs (car nodes) relations) '<))
-       (are-all-nodes-two nodes (count-nodes relations (repeated-alist nodes 0)))))
+;; Finds the nodes that are referenced in the relations list.
 
+(defun find-nodes (relations) 
+  (cond ((null relations) '())
+        (T (cons (caar relations) (cons (cdar relations) (find-nodes (cdr relations)))))))
+
+;; Checks if the relations passed form a cycle. It return only true
+;; if there is exactly one cycle with no unnecessary relations.
+
+(defun is-connected (relations)
+  (let ((nodes (sort (remove-duplicates (find-nodes relations)) '<)))
+    (and (equal nodes (sort (start-dfs (car nodes) relations) '<))
+         (are-all-nodes-two nodes (count-nodes relations (repeated-alist nodes 0))))))
+
+;; Used internally by find-cycles
+
+(defun relation-combination (used relations)
+  (cond ((null relations) (if (is-connected used) (list used) '()))
+        (T (append (relation-combination used (cdr relations))
+                   (relation-combination (cons (car relations) used) (cdr relations))))))
+
+;; Returns all cycles that can be found in the relations
+
+(defun find-cycles (relations) 
+  (relation-combination '() relations))
+  
 (print '(B C (f fi =)))
 (print '(A C (oi mi d > si)))
 (print '(A B (= < >)))
@@ -134,8 +174,11 @@
 (print (cdar '((1 . 2) (2 . 3) (3 . 4) (4 . 5) (5 . 1))))
 
 (let ((a '((1 . 2) (2 . 3) (3 . 4) (4 . 5) (5 . 1)))
-      (b '((1 . 2) (2 . 3) (3 . 1) (4 . 5) (5 . 4)))
-      (c '((1 . 2) (2 . 3) (3 . 4) (4 . 1) (1 . 3) (2 . 4))))
+      (b '((1 . 2) (2 . 3) (3 . 1) (4 . 5)))
+      (c '((1 . 2) (2 . 3) (3 . 4) (4 . 1) (1 . 3) (2 . 4)))
+      (d '((1 . 2) (2 . 3) (3 . 1))))
+	(print (find-nodes c))
+
 	(print (start-dfs 1 a))
 	(print (start-dfs 2 a))
         (print (start-dfs 3 a))
@@ -153,16 +196,14 @@
 
 	(print (count-nodes a (repeated-alist '(1 2 3 4 5) 0)))
 
-	(print (is-connected '(1 2 3 4 5) a))
-        (print (is-connected '(1 2 3 4 5) b))
-        (print (is-connected '(1 2 3 4) c))
+	(print (is-connected a))
+        (print (is-connected b))
+        (print (is-connected c)) 
 
-
-;	(print (are-all-nodes-two '(1 2 3 4 5) (count-nodes a (repeated-alist '(1 2 3 4 5) 0))))
+	(print (find-cycles a))
+        (print (find-cycles b))
+        (print (find-cycles c))
+        (print (find-cycles d))
 )
 
 
-
-; (let ((a '((1 . 2) (2 . 3) (3 . 4) (4 . 5) (5 . 1))))
-; 	(is-connected '(1 2 3 4 5) a)
-; )
