@@ -172,9 +172,9 @@
 (defun unsimplify-relation (simple rs)
   (cond ((null rs) '())
         ((and (equal (car simple) (caar rs))
-              (equal (cdr simple) (cadar rs)) (caddar rs)))
+              (equal (cdr simple) (cadar rs))) (caddar rs))
         ((and (equal (car simple) (cadar rs)) 
-              (equal (cdr simple) (caar rs)) (invert-relations (caddar rs))))
+              (equal (cdr simple) (caar rs))) (invert-relations (caddar rs)))
         (T (unsimplify-relation simple (cdr rs)))))
 
 ; Returns the edges of simple but with the according allen relations
@@ -204,15 +204,40 @@
 (defun check-relations (rs)
   (check-cycles (find-cycles (simplify-relations rs)) rs))
 
+; Used internally by intersect-execution-relations
+(defun intersect-execution-relation (execs r)
+  (cond ((null execs) (caddr r))
+        ((and (equal (caar execs) (car r))
+              (equal (cadar execs) (cadr r)))
+                (list-intersection (caddar execs) (caddr r)))
+        ((and (equal (caar execs) (cadr r))
+              (equal (cadar execs) (car r)))
+                (list-intersection (invert-relations (caddar execs)) (caddr r)))
+        (T (intersect-execution-relation (cdr execs) r))))
+
+; Intersect all allen relations of the exectuion plan with
+; the receipy plan's relations
+(defun intersect-execution-relations (execs rs) 
+  (cond ((null rs) '())
+        (T (cons (list (caar rs) (cadar rs) (intersect-execution-relation execs (car rs)))
+                 (intersect-execution-relations execs (cdr rs))))))
+
+; Check that the execution relations are consistent with the
+; allen relations defined in the recipe 
+(defun check-execution-consistency (execs rs)
+  (check-relations (intersect-execution-relations execs rs)))
+
 (print (if (let ((rel '((1 2 (= <)) 
-                    (2 3 (= >)) 
-                    (3 4 (o oi)) 
-                    (4 2 (fi))
-                    (4 5 (<)))))
+                        (2 3 (= >)) 
+                        (3 4 (o oi)) 
+                        (4 2 (fi))
+                        (4 5 (<)))))
   (let ((simp (simplify-relations rel)))
     (and 
       (equal simp '((1 . 2) (2 . 3) (3 . 4) (4 . 2) (4 . 5)))
       (equal (unsimplify-relations (cons '(2 . 1) simp) rel) (cons '(2 1 (= >)) rel))
       (equal (normalize-relations (car (find-cycles simp))) '((2 . 3) (3 . 4) (2 . 4)))
-      (check-relations rel))))
+      (check-relations rel)))
+      (equal (intersect-execution-relations '((1 2 (<)) (3 4 (f o)) (2 4 (f <)) (5 4 (=))) rel)
+             '((1 2 (<)) (2 3 (= >)) (3 4 (o)) (4 2 (fi)) (4 5 ()))))
   "Main test successful" "Main test failed"))

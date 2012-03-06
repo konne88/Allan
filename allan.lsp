@@ -118,9 +118,9 @@
   (equal (list-p '= '>) '(>))
   (equal (uniq-big-p '(= >) '(o oi)) '(o oi mi d f >))
   (equal (list-intersection '(> <) '(= >)) '(>))
+  (equal (list-intersection '(=) '(<)) '())
   (are-relations-consistent '(= >) '(o oi) '(f)))
   "Allen test successful" "Allen test failed"))
-
  
 ; checks the consistency of the raltions a= A->B, b= B->C c= A->C
 ;(print '(B C (f fi =))) b
