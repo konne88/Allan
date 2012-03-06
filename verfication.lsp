@@ -208,3 +208,8 @@
                      ("1" "Ende" "08:15")
                      ("4" "Ende" "09:00"))
                    ))))  
+
+
+; do it
+(print (check-execution-consistency (step-relations) (relations)))
+

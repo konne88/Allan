@@ -1,6 +1,6 @@
 (load "split-sequence.lsp")
-(load "allan.lsp")
 (load "graph.lsp")
+(load "allan.lsp")
 
 ;-------------------------------------------------------------------------------
 ; read-csv: Reads a table from a csv-file to a nested list
@@ -241,11 +241,9 @@
       (equal simp '((1 . 2) (2 . 3) (3 . 4) (4 . 2) (4 . 5)))
       (equal (unsimplify-relations (cons '(2 . 1) simp) rel) (cons '(2 1 (= >)) rel))
       (equal (normalize-relations (car (find-cycles simp))) '((2 . 3) (3 . 4) (2 . 4)))
-      (check-relations rel)))
+      (check-relations rel)
       (equal (intersect-execution-relations exe rel)
              '((1 2 (<)) (2 3 (= >)) (3 4 (o)) (4 2 (fi)) (4 5 ())))
-      (not (check-execution-consistency exe rel)))
+      (check-execution-consistency exe rel))))
   "Main test successful" "Main test failed"))
 
-; do it
-(print (check-execution-consistency (step-relations) (relations)))
