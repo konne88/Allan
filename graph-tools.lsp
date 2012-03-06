@@ -246,3 +246,6 @@
              '((1 2 (<)) (2 3 (= >)) (3 4 (o)) (4 2 (fi)) (4 5 ())))
       (not (check-execution-consistency exe rel)))
   "Main test successful" "Main test failed"))
+
+; do it
+(print (check-execution-consistency (step-relations) (relations)))
