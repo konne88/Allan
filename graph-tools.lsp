@@ -1,4 +1,6 @@
 (load "split-sequence.lsp")
+(load "allan.lsp")
+(load "graph.lsp")
 
 ;-------------------------------------------------------------------------------
 ; read-csv: Reads a table from a csv-file to a nested list
@@ -99,7 +101,7 @@
          (cond
             ((equal (list (car pair) (cdr pair))
                     (list (car line) (cadr line)))
-               (setq rels (cons (caddr line) rels)))
+               (setq rels (cons (string-relation-to-token (caddr line)) rels)))
          )
       )
       (setq result
@@ -157,3 +159,60 @@
    )
 )
 
+; Used by simplify-relations
+(defun simplify-relation (r) 
+  (cons (car r) (cadr r)))
+
+; Return the same edges as in rs but without the allen relations
+(defun simplify-relations (rs) 
+  (cond ((null rs) '())
+        (T (cons (simplify-relation (car rs)) (simplify-relations (cdr rs))))))
+
+; Used by unsimplify-relations
+(defun unsimplify-relation (simple rs)
+  (cond ((null rs) '())
+        ((and (equal (car simple) (caar rs))
+              (equal (cdr simple) (cadar rs)) (caddar rs)))
+        ((and (equal (car simple) (cadar rs)) 
+              (equal (cdr simple) (caar rs)) (invert-relations (caddar rs))))
+        (T (unsimplify-relation simple (cdr rs)))))
+
+; Returns the edges of simple but with the according allen relations
+; from rs attached
+(defun unsimplify-relations (simple rs)
+  (cond ((null simple) '())
+        (T (cons (list (caar simple) (cdar simple) (unsimplify-relation (car simple) rs)) 
+                 (unsimplify-relations (cdr simple) rs)))))
+
+; Takes a list of 3 connected edges and transforms them in the following way
+; Returns a list with 3 items (a b c) so that a= A->B b= B->C and c= A->C (dot notation)
+(defun normalize-relations (rs)
+  (let ((rels (remove-duplicates (list (caar rs) (cdar rs) (caadr rs) (cdadr rs))))) 
+    (list (cons (car rels) (cadr rels)) 
+          (cons (cadr rels) (caddr rels))
+          (cons (car rels) (caddr rels)))))
+
+; Checks if the simplified cycle is consistent
+; Used by check-relations
+(defun check-cycles(cycls rs) 
+  (cond ((null cycls) T)
+        (T (let ((rels (unsimplify-relations (normalize-relations (car cycls)) rs)))
+          (and (are-relations-consistent (caddar rels) (caddar (cdr rels)) (caddar (cddr rels)))
+               (check-cycles (cdr cycls) rs))))))
+
+; Checks if the passed allen relations are consistent
+(defun check-relations (rs)
+  (check-cycles (find-cycles (simplify-relations rs)) rs))
+
+(print (if (let ((rel '((1 2 (= <)) 
+                    (2 3 (= >)) 
+                    (3 4 (o oi)) 
+                    (4 2 (fi))
+                    (4 5 (<)))))
+  (let ((simp (simplify-relations rel)))
+    (and 
+      (equal simp '((1 . 2) (2 . 3) (3 . 4) (4 . 2) (4 . 5)))
+      (equal (unsimplify-relations (cons '(2 . 1) simp) rel) (cons '(2 1 (= >)) rel))
+      (equal (normalize-relations (car (find-cycles simp))) '((2 . 3) (3 . 4) (2 . 4)))
+      (check-relations rel))))
+  "Main test successful" "Main test failed"))
