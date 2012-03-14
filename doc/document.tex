@@ -1,0 +1,60 @@
+\documentclass[12pt,a4paper]{report}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Import package configuration
+
+  \input{configuration/packages}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Import document information
+
+  \input{configuration/info}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Import title page
+    
+    \input{configuration/title}
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Frontmatter and directories
+  
+    % Abstract and Ehrenwörtliche Erklärung
+      %\input{chapters/00_frontmatter}
+    
+    % Tables
+      \tableofcontents
+      %\listoffigures
+  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Import chapters
+  
+    % Introduction
+      \input{chapters/01_introduction}
+    
+    % State of the Art
+      \input{chapters/02_preliminary_considerations}
+    
+    % Toolchain Analysis
+      \input{chapters/03_design}
+    
+    % Message Box Solution Sketch
+      \input{chapters/04_implementation}
+    
+    % Outlook
+      \input{chapters/05_evaluation}
+    
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Appendices
+  
+    %\appendix
+    
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Directories
+  
+    %\bibliographystyle{plainnat}
+    %\bibliography{configuration/bibliography}
+
+\end{document}

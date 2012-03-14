@@ -1,0 +1,178 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Description:  This file contains some useful package imports and document-   %
+%               wide settings.                                                 %
+%               The first line in the package comments always comprises the    %
+%               official package caption as listed in the CTAN directory.      %
+%               Additional lines explain why exactly I include this package.   %
+%               Font choice and styling settings are to be regarded as highly  %
+%               subjective and may be adjusted to personal taste.              %
+%               Below settings work perfectly fine on my system (Windows XP +  %
+%               TeXlipse + MikTeX 2.9). Only the droidsans package had to be   %
+%               reinstalled manually because it was screwed up by MikTeX. But  %
+%               you probably don't even like this font and will replace it     %
+%               anyway.                                                        %
+%               Use at your own risk. No warranties granted. Ignore subjective %
+%               comments. Hope it helped ;-).                                  %
+% Author:       Tobias Stöckel                                                 %
+% Date:         08/02/2011                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Packages
+
+  \usepackage[utf8]{inputenc}
+    % Accept different input encodings.
+    % Needed to accept UTF-8 encoded source file.
+  
+  \usepackage[T1]{fontenc}
+    % Standard package for selecting font encodings.
+    % Needed for the droidsans font package.
+  
+  %\usepackage[defaultsans]{droidsans}
+    % LaTeX support for the Droid Sans font family.
+    % Make sure to install the droid package properly. MikTeX screws up the
+    % font map by default. If you just want any sans-serif font, use the Latin
+    % Modern Sans font. That one works out of the box (but looks ugly in the
+    % bold version so setting the font for headings to regular may be a good
+    % idea).
+    
+  \usepackage{lmodern}
+    % The Latin Modern Family of Fonts
+    % Improved version of Donald Knuth's original Computer Modern font. Shapes
+    % are pretty much the same but glyph coverage has been extended.
+  
+  \usepackage{sectsty}
+    % Control sectional headers.
+    % Needed to have non-bold chapter and section headings.
+  
+  \usepackage{fullpage}
+    % Set all page margins to 1.5cm.
+    % Needed to comply with DHBW rules.
+  
+  \usepackage{longtable}
+    % Allow tables to flow over page boundaries.
+  
+  \usepackage{parskip}
+    % Layout with zero \parindent and non-zero \parskip.
+    % Needed to turn off paragraph indentation and to customize paragraph
+    % spacing.
+  
+  \usepackage{graphicx}
+    % Enhanced support for graphics.
+    % Replaces the old graphics package.
+  
+  \usepackage{float}
+    % Improved interface for floating objects.
+    % Needed for centering images on page (?).
+  
+  \usepackage{epstopdf}
+    % Convert EPS to 'encapsulated' PDF using GhostScript.
+    % Needed to embed EPS vector graphics. Make sure that GhostScript is
+    % installed on your system (?).
+  
+  \usepackage{listings}
+    % Typeset source code listings using LaTex.
+    % Configure using \lstset.
+    
+  \usepackage{mdwlist}
+    % Make lists more compact
+    % Provides ``starred'' versions of the previous environments, e.g. itemize*,
+    % which are more compact
+    
+  \usepackage{natbib}
+    % Allows to choose between different citation styles, such as 'Harvard'
+    % Requires bibliographystyle{plainnat}
+    % Configure using \bibpunct
+  
+  \usepackage{tabularx}
+    % Tabulars with adjustable-width columns.
+    % Needed to easily stretch a table to a desired width (eg. page width)
+  
+  \usepackage[]{hyperref}
+    % Extensive support for hypertext in LaTeX.
+    % Needed to control the appearance of links in pdf and html output.
+    % Configure using \hypersetup. Usually this package should appear at the end
+    % of all other packages.
+  
+  \usepackage[all]{hypcap}
+    % Adjusting the anchors of captions.
+    % Prevents a link to an image from just jumping to the image's caption
+    % instead of the image itself. Has to appear after the hyperref package.
+  
+  \usepackage[toc,acronym]{glossaries}
+    % Create glossaries and lists of acronyms.
+    % Has to be placed after the hyperref package to make links clickable
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Settings
+
+  % Configure the hyperref package.
+    \hypersetup{
+        unicode=false,                  % non-Latin characters in Acrobat’s bookmarks
+        pdftoolbar=true,                % show Acrobat’s toolbar?
+        pdfmenubar=true,                % show Acrobat’s menu?
+        pdffitwindow=false,             % window fit to page when opened
+        pdfstartview={FitH},            % fits the width of the page to the window
+        pdftitle={Programmatic verification of a cooking recipe}, % title
+        pdfauthor={Konstantin Weitz, Tobias Stöckel},     % author
+        pdfsubject={Programmatic verification of a cooking recipe using allen-logic and LISP},
+        pdfcreator={Tobias Stöckel},    % creator of the document
+        pdfproducer={Tobias Stöckel},   % producer of the document
+        pdfnewwindow=true,              % links in new window
+        colorlinks=true,                % false: boxed links; true: colored links
+        linkcolor=black,                % color of internal links
+        citecolor=black,                % color of links to bibliography
+        filecolor=black,                % color of file links
+        urlcolor=black,                 % color of external links
+        hypertexnames=false             % fix for ``duplicate page ref'' problem
+    }
+
+  % Configure the (source code) listings package.
+    \lstset{ %
+        language=SQL,                   % choose the language of the code
+        basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+        numbers=left,                   % where to put the line-numbers
+        numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+        stepnumber=2,                   % the step between two line-numbers. If it's 1 each line will be numbered
+        numbersep=5pt,                  % how far the line-numbers are from the code
+        backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+        showspaces=false,               % show spaces adding particular underscores
+        showstringspaces=false,         % underline spaces within strings
+        showtabs=false,                 % show tabs within strings adding particular underscores
+        frame=single,                   % adds a frame around the code
+        tabsize=2,                      % sets default tabsize to 2 spaces
+        captionpos=b,                   % sets the caption-position to bottom
+        breaklines=true,                % sets automatic line breaking
+        breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+        title=\lstname,                 % show the filename of files included with \lstinputlisting; also try caption instead of title
+    }
+  
+  % Default search path for images (graphicx)
+    \graphicspath{{images/}}
+  
+  % Set line spacing in order to comply with DHBW rules.
+    \linespread{1.3}
+    
+  % Add paragraph spacing because it looks better - at least to me. And it
+  % generates additional pages :-).
+    \setlength{\parskip}{3ex plus 0.5ex minus 0.2ex}
+  
+  % Set the default font for this document to the sans-serif variant of the
+  % currently loaded font package (?)
+    \renewcommand*\familydefault{\sfdefault}
+  
+  % Set chapter and section headings to non-bold font. Again, just because it
+  % looks better to me.
+    \allsectionsfont{\normalfont}
+  
+  % Adjust interword spacing. The Droid Sans font needs some more of it in my
+  % opinion.
+  %  \spaceskip0.4em plus 1.66666pt minus 1.11111pt \relax
+  
+  % Adjust the natbib citation style, mainly forcing it to use parantheses
+  % instead o f brackets.
+    \bibpunct{(}{)}{;}{a}{,}{,}
+  
+  
