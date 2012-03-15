@@ -1,5 +1,21 @@
-\chapter{Design}
+\chapter{Public Interface}
 
-  The design and interfaces of the solution.
+  Inputs
+    Three input files: relations.csv, steps.csv, times.csv
+    steps.csv is never used
+    Semicolon separated tables
+    Describe the individual files
+    File names are hard-coded
       
-    
+  Usage
+    Either via (load ``verfication.lsp'') or clisp verfication.lsp
+    for reuse there are the functions check-relations and
+    check-execution-consistency which return true or false.
+    All source and input files have to be in the same directory.
+  
+  Outputs
+    Some noise from the test cases when loaded.
+    ``The recipe is consistent.'' + ``The execution plan matches/doesn't match
+    the recipe.''
+    or ``The recipe is inconsistent.''
+    Alternatively T or Nil if the functions are called manually.

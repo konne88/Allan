@@ -1,5 +1,35 @@
 \chapter{Implemenation}
 \label{sec:impl}
 
-    The most important implementation details.
-
+    Purely lisp
+    Several source files which are included automatically
+    Naming
+    The workflow is as follows:
+        1. Read input data
+        2. Convert to graph/list representation
+        3. Scan for cycles via dfs
+        4. If there are cycles with more than 3 nodes, abort/invalidate
+        5. Check 3-node-cycles for local consistency
+            - Normalize
+            - Apply p-function between two edges
+            - Intersect with resulting edge
+            - Check for empty set
+        6. Output result, whether recipe is consistent
+        7. Read execution plan
+        8. Infer time relations between execution steps
+        9. Create fully connected graph
+        10. Intersect execution step graph with recipe graph
+        11. Check consistency of result
+        12. Output result, whether execution plan matches the recipe
+    steps.csv is ignored
+    Usage of external library ``split-sequence.lsp''
+    Project files and directories:
+        .git: version control
+        doc: sources for this documentation
+        allan.lsp: Implementation of the basic allen-logic as created in class
+        graph.lsp: Graph-processing functions for cycle-detection
+        graph-tools.lsp: Consistency checking and file-i/o
+        split-sequence.lsp: External library for processing the CSV
+        verfication.lsp: The ``main''-file. Includes all others. Execution plan
+        validation
+    The files contain test cases which may produce some noise in the output.
