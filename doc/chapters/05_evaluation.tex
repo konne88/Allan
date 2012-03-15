@@ -1,15 +1,31 @@
 \chapter{Evaluation}
 
-  Pros
-    Graph-processing works nicely in lisp
-    Nice and modular
-    Nice cycle detection
-    Works with multiple cycles and isolated points
+  \section{Weaknesses}
+  
+    Even after careful design and development, the solution still carries some
+    open points:
     
-  Cons
-    Lisp is still hard to read
-    No nice user interface
-    Hard-coded file-names
-    No error handling
-    Brute-force cycle detection
+    From an end user's perspective, the application's usage is rather rough. Not
+    only will he need to ensure a working Lisp environment, there is also no
+    graphical user interface and the command line shows some potentially
+    distracting internal noise. The handling of the input files might also be
+    improved, considering flexible file names or syntax error handling.
+    
+    From a developer's perspective, the code organization could be optimized and
+    unified, also considering formatting and naming conventions.
+    Algorithmically, the cycle detection resorts to a brute-force approach,
+    which might hold potential for performance optimizations.
+  
+  \section{Strengths}
+  
+    Despite its ``barrier to entry'', Lisp proves to be a very suitable tool for
+    solving graph problems.
+    
+    The developed solution is believed to be a very powerful one, which can cope
+    with arbitrarily complex input graphs (as long as computing capacity
+    suffices and there are no cycles larger than three nodes). It works nicely
+    with several cycles, separated graphs and isolated points.
+    
+    The source code itself is also sensibly modularized which improves
+    understandiblity, testability und reusability.
  
