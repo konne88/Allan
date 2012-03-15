@@ -24,7 +24,7 @@
 )
 
 ; Test Cases
-(print (list 'allen-relation-test (and (equal (allen-relation 1 2 3 6) '<)
+(print (if (and (equal (allen-relation 1 2 3 6) '<)
             (equal (allen-relation 1 3 3 6) 'm)
             (equal (allen-relation 1 4 3 6) 'o)
             (equal (allen-relation 3 5 3 6) 's)
@@ -36,7 +36,9 @@
             (equal (allen-relation 4 5 3 6) 'd)
             (equal (allen-relation 3 6 3 5) 'si)       
             (equal (allen-relation 3 6 4 5) 'di)       
-            (equal (allen-relation 3 6 4 6) 'fi))))  
+            (equal (allen-relation 3 6 4 6) 'fi))
+            "Allen-relation test successful."
+            "Allen-relation test failed." ))  
             
 
 
@@ -184,32 +186,46 @@
 ;-------------------------------------------------------------------------------
 ; Test Cases
 
-(print (list 'get-end-test (and (equal 845 (get-end 2 '(("1" "Beginn" "08:00")
+(print (if (and (equal 845 (get-end 2 '(("1" "Beginn" "08:00")
                                                    ("2" "Beginn" "08:15")
                                                    ("4" "Beginn" "08:30")
                                                    ("2" "Ende" "08:45"))))
                                 (null (get-end 1 '(("1" "Beginn" "08:00")
                                                    ("2" "Beginn" "08:15")
                                                    ("4" "Beginn" "08:30")
-                                                   ("2" "Ende" "08:45")))))))
+                                                   ("2" "Ende" "08:45")))))
+            "Get-end test successful"
+            "Get-end test failed"))
                                                    
 (print (list 'step-relations-test (step-relations)))
 
-(print (list 'unordered-perms-test (equal '((1 2) (1 3) (1 4) (2 3) (2 4) (3 4)) (unordered-perms '(1 2 3 4)))))
+(print (if (equal '((1 2) (1 3) (1 4) (2 3) (2 4) (3 4)) (unordered-perms '(1 2 3 4)))
+            "Unordered-perms test successful"
+            "Unordered-perms test failed"))
    
 
 
 
-(print (list 'read-times-test (equal '((1 (800 815)) (2 (815 845)) (4 (830 900)))
+(print (if (equal '((1 (800 815)) (2 (815 845)) (4 (830 900)))
                  (read-times '(("1" "Beginn" "08:00")
                      ("2" "Beginn" "08:15")
                      ("4" "Beginn" "08:30")
                      ("2" "Ende" "08:45")
                      ("1" "Ende" "08:15")
                      ("4" "Ende" "09:00"))
-                   ))))  
+                   ))
+            "Read-times test successful"
+            "Read-times test failed"))  
 
 
 ; do it
-(print (check-execution-consistency (step-relations) (relations)))
-
+(cond
+    ((check-relations (relations))
+        (print "The recipe is consistent.")
+        (cond
+            ((check-execution-consistency (step-relations) (relations))
+                (print "The execution plan matches the recipe."))
+            ( T
+                (print "The execution plan doesn't match the recipe."))))
+    ( T
+        (print "The recipe is inconsistent.")))
