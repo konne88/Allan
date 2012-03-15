@@ -4,8 +4,9 @@
     
     This implementation is accompanied by three input files. They are all
     plain-text files containing tabular data separated by semicolons. The first line of
-    each file is ignored, so it may contain a table header. The files and their
-    usage are defined as follows:
+    each file is ignored. In order to make the file more human-readable, this
+    line contains a table header. The files and their usage are defined as
+    follows:
     
     \begin{description}
         \item[relations.csv] \hfill \\
@@ -15,10 +16,12 @@
             where steps are identified by numbers and the relation by the
             well-known symbols for Allen relations.
         \item[times.csv] \hfill \\
-            Defines the concrete execution plan. For each step a ``Beginn'' and
-            an ``Ende'' entry has to be present. The format of one line is:
+            Defines the concrete execution plan. For each step a
+            \texttt{``Beginn''} and an \texttt{``Ende''} entry has to be
+            present.
+            The format of one line is:
             \texttt{<step>;[Beginn|Ende];<time>}\\
-            Time is represented as a 24-hour value, such as ``18:45''.
+            Time is represented as a 24-hour value, such as \texttt{``18:45''}.
         \item[steps.csv] \hfill \\
             Defines the individual steps more closely. Assigns a description and
             a duration to the numbers used in the previous files. The format of
@@ -35,8 +38,10 @@
   \section{Usage}
     
     The entry point to the solution is the source file \texttt{verfication.lsp}
-    (the ``i'' is actually missing from the file name). It can be loaded to the
-    Lisp environment either from the command line via
+    (the ``i'' is actually missing from the file name ``for historical
+    reasons'').
+    It can be loaded to the Lisp environment either from a system command prompt
+    via
     
     \begin{center}
         \texttt{clisp verfication.lsp}
@@ -57,6 +62,11 @@
     
     \begin{center}\texttt{(check-execution-consistency (step-relations)
     (relations))}.\end{center}
+    
+    where \texttt{(relations)} reads the recipe's relations from
+    \texttt{relations.csv} and \texttt{(step-relations)} reads the execution
+    plan from \texttt{times.csv} and infers the relations between the
+    activities.
   
   \section{Output}
     

@@ -16,34 +16,38 @@
     for consistency. Luckily, only a few cases have to be considered for this
     purpose:
     
-    First of all, a graph consisting exclusively of isolated nodes
+    First of all, a graph consisting exclusively of \emph{isolated nodes}
     is guaranteed to be consistent. The reason for that is, that ``no edge''
     between two nodes is equivalent to an edge labelled with all possible
     Allen Relations. Of all possible Allen Relations, at least one will always
     be satisfied, thus making it impossible to invalidate the edge.
     
-    Secondly, a graph without any cycles is guaranteed to be consistent as well.
+    Secondly, a graph \emph{without any cycles} is guaranteed to be consistent
+    as well.
     If there are no cross-dependencies within the graph, no conflicts can arise between
     different edges. A cycle in that sense does not have to be directed.
     Although an Allen Graph has directed edges, they can be inverted at will by
     inverting their associated temporal relations.
     
-    The two cases above leave cycles as the critical component for consistency
-    checking.
+    The two cases above leave \emph{cycles} as the critical component for
+    consistency checking.
     Allen's logic provides an algorithm to validate the consistency of such
     cycles efficiently. This algorithm has been covered extensively during KBS
     courses, so it won't be elaborated on here. The presented solution makes use
-    of this algorithm but unfortunately, it only works for cycles consisting of
-    exactly three nodes. As a consequence, this implementation scans a recipe for cycles
-    first, and rejects it, if any cycle with more than three nodes is detected.
+    of this algorithm but unfortunately, it is only applicable to cycles
+    consisting of exactly three nodes. As a consequence, this implementation
+    %scans a recipe for cycles first, and rejects it, if any cycle with more
+    %than three nodes is detected.
+    only yields valid results for recipes that contain cycles with no more than
+    three edges.
     
     \section{Execution Plan Validation}
     
     Beyond verifying the consistency of a recipe, the solution also validates a
     list of concrete start and end times for the individual activities against the
     recipe. This list will be referred to as the \emph{Execution Plan}.
-    The basic idea behind this validation is to infer the Allen-relations between the
-    concrete execution steps and compare them to the Allen-relations in the
+    The basic idea behind this validation is to infer the Allen Relations between the
+    concrete execution steps and compare them to the Allen Relations in the
     recipe graph. If the relations for the inferred edges are subsets of the
     relations for the corresponding edges in the recipe graph, the concrete
     execution plan is a valid instantiation of the recipe. If any of the
@@ -55,7 +59,7 @@
     intersection logic to work, it is important to note that a non-existent edge
     is fundamentally different from an edge with an empty set of relations.
     While the first one actually stands for ``all relations possible'', the
-    second one stands for ``no relation possible'', which is the exact opposite.
+    second one stands for ``no relation possible'', which are exact opposites.
     An edge with an empty set of
     relations can never be satisfied and thus invalidates the entire graph.
 
