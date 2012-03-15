@@ -1,41 +1,48 @@
 \chapter{Preliminary Considerations}
 
-    The theoretical basis for the following considerations is formulated
-    by Allen's temporal logic. The individual steps of a recipe are activities
-    with a specific length and with very specific temporal dependencies between each other. This
-    makes them perfect candidates for a represenation according to Allen. A
-    recipe in Allen-representation is a graph with one node per activity and with edges
-    labelled by the temporal relations between them.
+    The  following considerations are based on Allen's temporal logic. This
+    approach is justified, because the individual steps of a recipe are
+    activities with a specific length and with very specific temporal dependencies
+    between them. Such time intervals with temporal dependencies are ideal
+    candidates for a represenation according to Allen. A
+    recipe in Allen Representation can be thought of as a graph with one node
+    per activity and with edges
+    labelled with the temporal relations that hold between them. Those temporal
+    relations mirror the dependencies between activities in a cooking recipe.
     
     \section{Recipe Validation}
     
-    In order to validate a recipe, its Allen-representation has to be checked
-    for consistency. Luckily, only a few cases are important for this purpose:
+    In order to validate a recipe, its Allen Representation has to be checked
+    for consistency. Luckily, only a few cases have to be considered for this
+    purpose:
     
     First of all, a graph consisting exclusively of isolated nodes
-    is always consistent. This is because ``no edge'' between two nodes is equivalent to
-    an edge labelled with all possible Allen-relations. Of all possible
-    Allen-relations, at least one will always be satisfied, thus making it
-    impossible to invalidate the edge.
+    is guaranteed to be consistent. The reason for that is, that ``no edge''
+    between two nodes is equivalent to an edge labelled with all possible
+    Allen Relations. Of all possible Allen Relations, at least one will always
+    be satisfied, thus making it impossible to invalidate the edge.
     
-    Secondly, a graph without any cycles is always consistent as well. If there
-    are no cross-dependencies within the graph, no conflicts can arise between
+    Secondly, a graph without any cycles is guaranteed to be consistent as well.
+    If there are no cross-dependencies within the graph, no conflicts can arise between
     different edges. A cycle in that sense does not have to be directed.
-    Although an Allen-graph has directed edges, they can be inverted at will by
+    Although an Allen Graph has directed edges, they can be inverted at will by
     inverting their associated temporal relations.
     
-    This leaves cycles as the critical component for consistency checking.
+    The two cases above leave cycles as the critical component for consistency
+    checking.
     Allen's logic provides an algorithm to validate the consistency of such
-    cycles efficiently. The presented solution makes use of this
-    algorithm but unfortunately, it only works for cycles consisting of exactly
-    three nodes. Because of that, this implementation scans a recipe for cycles
+    cycles efficiently. This algorithm has been covered extensively during KBS
+    courses, so it won't be elaborated on here. The presented solution makes use
+    of this algorithm but unfortunately, it only works for cycles consisting of
+    exactly three nodes. As a consequence, this implementation scans a recipe for cycles
     first, and rejects it, if any cycle with more than three nodes is detected.
     
     \section{Execution Plan Validation}
     
     Beyond verifying the consistency of a recipe, the solution also validates a
-    list of concrete start and end times for the execution steps against the
-    recipe. The basic notion is to infer the Allen-relations between the
+    list of concrete start and end times for the individual activities against the
+    recipe. This list will be referred to as the \emph{Execution Plan}.
+    The basic idea behind this validation is to infer the Allen-relations between the
     concrete execution steps and compare them to the Allen-relations in the
     recipe graph. If the relations for the inferred edges are subsets of the
     relations for the corresponding edges in the recipe graph, the concrete
@@ -48,10 +55,11 @@
     intersection logic to work, it is important to note that a non-existent edge
     is fundamentally different from an edge with an empty set of relations.
     While the first one actually stands for ``all relations possible'', the
-    second one stands for ``no relation possible''. An edge with an empty set of
-    relations can never be satisfied, which invalidates the entire graph.
+    second one stands for ``no relation possible'', which is the exact opposite.
+    An edge with an empty set of
+    relations can never be satisfied and thus invalidates the entire graph.
 
     As an aside, all input files are assumed to be syntactically and
     semantically correct (with the exception of inconsistencies in the temporal
-    relations, of course). Especially for the execution plan file (times.csv),
+    relations, of course). Especially for the execution plan file (\texttt{times.csv}),
     this means that each step has to be listed with exactly one start and one end time.

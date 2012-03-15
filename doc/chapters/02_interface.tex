@@ -2,30 +2,31 @@
 
   \section{Input Files}
     
-    This implementation comes with three input files. They are all plain-text
-    files containing tabular data separated by semicolons. The first line of
+    This implementation is accompanied by three input files. They are all
+    plain-text files containing tabular data separated by semicolons. The first line of
     each file is ignored, so it may contain a table header. The files and their
     usage are defined as follows:
     
     \begin{description}
         \item[relations.csv] \hfill \\
             Defines the recipe by listing the relations between the individual
-            steps. The format of one line is:\\
+            steps. The format of one line is:
             \texttt{<step\_1>;<step\_2>;<relation>}\\
             where steps are identified by numbers and the relation by the
             well-known symbols for Allen relations.
         \item[times.csv] \hfill \\
             Defines the concrete execution plan. For each step a ``Beginn'' and
-            an ``Ende'' entry has to be present. The format of one line is:\\
+            an ``Ende'' entry has to be present. The format of one line is:
             \texttt{<step>;[Beginn|Ende];<time>}\\
-            Time is represented as 24-hour value, such as ``18:45''.
+            Time is represented as a 24-hour value, such as ``18:45''.
         \item[steps.csv] \hfill \\
             Defines the individual steps more closely. Assigns a description and
             a duration to the numbers used in the previous files. The format of
             one line is:\\
             \texttt{<step>;<description>;<duration>}\\
             The duration is given in minutes. This file is not used in this
-            implementation.
+            implementation because activity durations are derived from the times
+            given in \texttt{times.csv}
     \end{description}
     
     The file names are fixed and the files have to be present in the code's
@@ -34,8 +35,8 @@
   \section{Usage}
     
     The entry point to the solution is the source file \texttt{verfication.lsp}
-    (note the type-o). It can be loaded to the Lisp environment either from the
-    command line via
+    (the ``i'' is actually missing from the file name). It can be loaded to the
+    Lisp environment either from the command line via
     
     \begin{center}
         \texttt{clisp verfication.lsp}
@@ -45,7 +46,7 @@
     
     \begin{center}\texttt{(load ``verfication.lsp'')}\end{center}
     
-    Loading the file the one way or the other will automatically invoke recipe
+    Loading the file the one way or the other will automatically invoke the recipe
     and execution plan validation. Recipe validation can also be called manually
     through the function 
     
