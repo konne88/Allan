@@ -1,35 +1,116 @@
 \chapter{Implemenation}
 \label{sec:impl}
 
-    Purely lisp
-    Several source files which are included automatically
-    Naming
-    The workflow is as follows:
-        1. Read input data
-        2. Convert to graph/list representation
-        3. Scan for cycles via dfs
-        4. If there are cycles with more than 3 nodes, abort/invalidate
-        5. Check 3-node-cycles for local consistency
-            - Normalize
-            - Apply p-function between two edges
-            - Intersect with resulting edge
-            - Check for empty set
-        6. Output result, whether recipe is consistent
-        7. Read execution plan
-        8. Infer time relations between execution steps
-        9. Create fully connected graph
-        10. Intersect execution step graph with recipe graph
-        11. Check consistency of result
-        12. Output result, whether execution plan matches the recipe
-    steps.csv is ignored
-    Usage of external library ``split-sequence.lsp''
-    Project files and directories:
-        .git: version control
-        doc: sources for this documentation
-        allan.lsp: Implementation of the basic allen-logic as created in class
-        graph.lsp: Graph-processing functions for cycle-detection
-        graph-tools.lsp: Consistency checking and file-i/o
-        split-sequence.lsp: External library for processing the CSV
-        verfication.lsp: The ``main''-file. Includes all others. Execution plan
-        validation
-    The files contain test cases which may produce some noise in the output.
+    The solution is implemented entirely in Lisp. Lisp was chosen because of its
+    strenghts in graph processing, as graphs can be easily represented as lists.
+    The source code is split up into several files to allow for better
+    modularization and collaboration. The main code takes care of importing all
+    necessary files into \texttt{verfication.lsp}.
+    
+    \section{Workflow}
+    
+        The main processing workflow consists of two phases. At first, the
+        recipe is checked for consistency:
+        
+        \begin{description}
+            \item[Read recipe] \hfill \\
+                Read the \texttt{relations.csv} input file, parse it and
+                represent its tabular data as a nested list.
+            \item[Create graph representation] \hfill \\
+                Transform the tabular step data into a list of edges which are
+                attributed with temporal relations.
+            \item[Scan for cycles] \hfill \\
+                Scan the graph for cycles by performing a depth-first-search.
+                Only collect real cycles with no unnecessary additional nodes.
+                The idea is, that in such a cycle, all nodes are connected and
+                each node has exactly two different neighbors. Flag the graph as
+                invalid if a cycle with four or more nodes is detected.
+            \item[Normalize cycles] \hfill \\
+                If necessary, invert some relations for the consistency check
+                algorithm.
+            \item[Check for local consistency] \hfill \\
+                For each three-node cycle perform local consistency checking
+                according to Allen's temporal logic. Makes use of the P-function
+                as defined during classroom exercises.
+        \end{description}
+        
+        Next, the execution plan is validated against the recipe:
+        
+        \begin{description}
+            \item[Read execution plan] \hfill \\
+                Read the \texttt{times.csv} input file, parse it and represent
+                its tabular data as a nested list. Also perform some formatting,
+                such as removing the colon from times to allow for arithmetic
+                operations.
+            \item[Infer temporal relations] \hfill \\
+                Create a permutation of unordered pairs for the steps in the
+                execution plan and infer the temporal relations for those pairs.
+                There will be exactly one matching Allen relation per pair.
+            \item[Create graph representation] \hfill \\
+                The pairs from the previous step are again edges of a graph.
+                Bring this graph to a common representation.
+            \item[Intersect with recipe graph] \hfill \\
+                For each edge, intersect the temporal relations from the recipe
+                graph with those from the corresponding edge in the execution
+                plan graph.
+            \item[Check consistency of intersection] \hfill \\
+                Use the previously defined graph consistency function to
+                determine if the intersection of relations is still valid. If it
+                is, then the execution plan is a valid instantiation of the
+                recipe.
+        \end{description}
+    
+    \section{Project Files}
+    
+        Quick reference of the project's files and directories:
+        
+        \begin{description}
+            \item[.git] \hfill \\
+                Version control
+            \item[doc] \hfill \\
+                Sources for this documentation
+            \item[allan.lsp] \hfill \\
+                Implementation of the basic allen-logic as developed during
+                class-room exercises
+            \item[graph.lsp] \hfill \\
+                Graph-processing functions, mainly for cycle-detection
+            \item[graph-tools.lsp] \hfill \\
+                Functions for consistency checking and file-I/O
+            \item[split-sequence.lsp] \hfill \\
+                External library for processing the comma-separated files
+            \item[verification.lsp] \hfill \\
+                Functions for execution plan validation. Forms the application's
+                entry point.
+        \end{description}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
