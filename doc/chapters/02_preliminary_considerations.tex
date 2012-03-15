@@ -7,6 +7,8 @@
     recipe in Allen-representation is a graph with one node per activity and with edges
     labelled by the temporal relations between them.
     
+    \section{Recipe Validation}
+    
     In order to validate a recipe, its Allen-representation has to be checked
     for consistency. Luckily, only a few cases are important for this purpose:
     
@@ -25,9 +27,11 @@
     This leaves cycles as the critical component for consistency checking.
     Allen's logic provides an algorithm to validate the consistency of such
     cycles efficiently. The presented solution makes use of this
-    algorithm. Unfortunately, it only works for cycles consisting of exactly
+    algorithm but unfortunately, it only works for cycles consisting of exactly
     three nodes. Because of that, this implementation scans a recipe for cycles
     first, and rejects it, if any cycle with more than three nodes is detected.
+    
+    \section{Execution Plan Validation}
     
     Beyond verifying the consistency of a recipe, the solution also validates a
     list of concrete start and end times for the execution steps against the
