@@ -1,21 +1,69 @@
 \chapter{Public Interface}
 
-  Inputs
-    Three input files: relations.csv, steps.csv, times.csv
-    steps.csv is never used
-    Semicolon separated tables
-    Describe the individual files
-    File names are hard-coded
+  \section{Input Files}
+    
+    This implementation comes with three input files. They are all plain-text
+    files containing tabular data separated by semicolons. The first line of
+    each file is ignored, so it may contain a table header. The files and their
+    usage are defined as follows:
+    
+    \begin{description}
+        \item[relations.csv] \hfill \\
+            Defines the recipe by listing the relations between the individual
+            steps. The format of one line is:\\
+            \texttt{<step\_1>;<step\_2>;<relation>}\\
+            where steps are identified by numbers and the relation by the
+            well-known symbols for Allen relations.
+        \item[times.csv] \hfill \\
+            Defines the concrete execution plan. For each step a ``Beginn'' and
+            an ``Ende'' entry has to be present. The format of one line is:\\
+            \texttt{<step>;[Beginn|Ende];<time>}\\
+            Time is represented as 24-hour value, such as ``18:45''.
+        \item[steps.csv] \hfill \\
+            Defines the individual steps more closely. Assigns a description and
+            a duration to the numbers used in the previous files. The format of
+            one line is:\\
+            \texttt{<step>;<description>;<duration>}\\
+            The duration is given in minutes. This file is not used in this
+            implementation.
+    \end{description}
+    
+    The file names are fixed and the files have to be present in the code's
+    working directory.
       
-  Usage
-    Either via (load ``verfication.lsp'') or clisp verfication.lsp
-    for reuse there are the functions check-relations and
-    check-execution-consistency which return true or false.
-    All source and input files have to be in the same directory.
+  \section{Usage}
+    
+    The entry point to the solution is the source file \texttt{verfication.lsp}
+    (note the type-o). It can be loaded to the Lisp environment either from the
+    command line via
+    
+    \begin{center}
+        \texttt{clisp verfication.lsp}
+    \end{center}
+    
+    or from the interactive interpreter or another Lisp program via
+    
+    \begin{center}\texttt{(load ``verfication.lsp'')}\end{center}
+    
+    Loading the file the one way or the other will automatically invoke recipe
+    and execution plan validation. Recipe validation can also be called manually
+    through the function 
+    
+    \begin{center}\texttt{(check-relations (relations))}.\end{center}
+    
+    Execution plan
+    validation can be called manually through the function
+    
+    \begin{center}\texttt{(check-execution-consistency (step-relations)
+    (relations))}.\end{center}
   
-  Outputs
-    Some noise from the test cases when loaded.
-    ``The recipe is consistent.'' + ``The execution plan matches/doesn't match
-    the recipe.''
-    or ``The recipe is inconsistent.''
-    Alternatively T or Nil if the functions are called manually.
+  \section{Output}
+    
+    When loaded, the application will at first print some noise from internal
+    test cases.
+    In the last lines it will print verbally whether the recipe in
+    \texttt{relations.csv} is consistent and whether the execution plan in
+    \texttt{times.csv} matches the recipe.
+    
+    The two functions mentioned above return either \texttt{T} or \texttt{Nil},
+    indicating either a successful or a failed validation.
