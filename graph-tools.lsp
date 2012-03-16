@@ -196,7 +196,9 @@
 ; Used by check-relations
 (defun check-cycles(cycls rs) 
   (cond ((null cycls) T)
-        (T (let ((rels (unsimplify-relations (normalize-relations (car cycls)) rs)))
+        (T 
+          (cond ((> (length (car cycls)) 3) (print "Warning: Graph contains complex cycles. Consistency cannot be guaranteed.")))
+          (let ((rels (unsimplify-relations (normalize-relations (car cycls)) rs)))
           (and (are-relations-consistent (caddar rels) (caddar (cdr rels)) (caddar (cddr rels)))
                (check-cycles (cdr cycls) rs))))))
 
