@@ -24,7 +24,19 @@
                 Only collect real cycles with no unnecessary additional nodes.
                 The idea is, that in such a cycle, all nodes are connected and
                 each node has exactly two different neighbors. Flag the graph as
-                invalid if a cycle with four or more nodes is detected.
+                invalid if a cycle with four or more nodes is detected. Figure
+                \ref{fig:cycles} shows, which cycles are detected in a sample
+                graph.
+    
+                \begin{figure}[h]
+                  \centering
+                  \includegraphics[width=\linewidth]{cycles.pdf}
+                  \caption[Cycle detection]{Cycle detection from a sample graph.
+                  (1) Cycles, as they are detected by this implementation. (2)
+                  Examples of subgraphs that don't qualify as pure cycles.}
+                  \label{fig:cycles}
+                \end{figure}
+    
             \item[Normalize cycles] \hfill \\
                 If necessary, invert some relations for the consistency check
                 algorithm.
@@ -57,7 +69,21 @@
                 Use the previously defined graph consistency function to
                 determine if the intersection of relations is still valid. If it
                 is, then the execution plan is a valid instantiation of the
-                recipe.
+                recipe. Figure \ref{fig:intersection} shows the intersection of
+                an execution plan with one matching and one not-matching recipe.
+    
+                \begin{figure}[h]
+                  \centering
+                  \includegraphics[width=\linewidth]{intersection.pdf}
+                  \caption[Execution plan validation]{A concrete execution plan
+                  is validated against/intersected with two different recipes.
+                  (1) The intersection result is still consistent, so the
+                  execution plan is valid for this recipe. (2) The intersection
+                  contains an unsatisfiable edge between \texttt{B} and
+                  \texttt{A}, so the execution plan does not match the recipe.}
+                  \label{fig:intersection}
+                \end{figure}
+                
         \end{description}
     
     \section{Project Files}
@@ -78,7 +104,7 @@
                 Functions for consistency checking and file-I/O
             \item[split-sequence.lsp] \hfill \\
                 External library for processing the comma-separated files
-            \item[verification.lsp] \hfill \\
+            \item[verfication.lsp] \hfill \\
                 Functions for execution plan validation. Forms the application's
                 entry point.
         \end{description}

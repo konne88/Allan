@@ -3,12 +3,32 @@
     The  following considerations are based on Allen's temporal logic. This
     approach is justified, because the individual steps of a recipe are
     activities with a specific length and with very specific temporal dependencies
-    between them. Such time intervals with temporal dependencies are ideal
-    candidates for a represenation according to Allen. A
-    recipe in Allen Representation can be thought of as a graph with one node
+    between them. A representation of a cooking recipe with multiple
+    activities on a time axis can be found in figure \ref{fig:time-chart}. Such
+    time intervals with temporal dependencies are ideal candidates for a
+    represenation according to Allen. A recipe in Allen Representation can be
+    thought of as a graph with one node
     per activity and with edges
     labelled with the temporal relations that hold between them. Those temporal
     relations mirror the dependencies between activities in a cooking recipe.
+    The sample recipe from above is depicted in Allen Represenation in figure
+    \ref{fig:graph}.
+    
+    \begin{figure}[]
+     \centering
+     \includegraphics[width=0.7\linewidth]{time-chart.pdf}
+     \caption[Recipe time chart]{Representing a cooking recipe as a set of
+     (possibly concurrent) activities.}
+     \label{fig:time-chart}
+    \end{figure}
+    
+    \begin{figure}[]
+     \centering
+     \includegraphics[width=0.7\linewidth]{recipe-graph.pdf}
+     \caption[Recipe graph]{Representing the recipe from figure
+     \ref{fig:time-chart} as an Allen Graph.}
+     \label{fig:graph}
+    \end{figure}
     
     \section{Recipe Validation}
     
